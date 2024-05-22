@@ -1,20 +1,16 @@
 from aiogram import Bot, Dispatcher, types, executor
 from config import TELEGRAM_TOKEN
-from aiogram.types import  ReplyKeyboardMarkup,KeyboardButton
+from keyboard.keyboards import get_keyboard_1,get_keyboard_2
+from aiogram.types import InlineKeyboardMarkup,InlineKeyboardButton
+
 
 bot = Bot(token= TELEGRAM_TOKEN)
 dp = Dispatcher(bot)
 
-keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
-button_1 = KeyboardButton('Отправь фото Рублева')
-button_2 = KeyboardButton('Перейти на некст клавиатуру')
-keyboard.add( button_1, button_2)
-
-keyboard_2 = ReplyKeyboardMarkup(resize_keyboard=True)
-button_3 = KeyboardButton('Отправь фото Алькараса')
-button_4 = KeyboardButton('Вернутся на первую клавиатуру')
-keyboard_2.add( button_3, button_4)
-
+keyboard_inline = InlineKeyboardMarkup(row_width=1)
+but_inline = InlineKeyboardButton('Посмотреть',url='https://www.tennis24.com/')
+but_inline2 = InlineKeyboardButton('Посмотреть',url='https://www.tennis24.com/')
+keyboard_inline.add(but_inline,but_inline2)
 async def set_commands(bot:Bot):
     commands = [
         types.BotCommand(command='/start', description= 'Команда для того чтобы запустить бота'),
@@ -26,16 +22,16 @@ async def set_commands(bot:Bot):
 
 @dp.message_handler(commands='start')
 async def start(message: types.Message):
-    await message.answer('Привет, я твой первый ЭХО бот', reply_markup= keyboard)
+    await message.answer('Привет, я твой первый ЭХО бот', reply_markup= get_keyboard_1)
 
 @dp.message_handler(lambda message: message.text == 'Отправь фото Рублева')
 async def button_1_click(message: types.Message):
-    await bot.send_photo(message.chat.id, photo='https://airbet.ru/wp-content/uploads/2021/04/20-min-3.jpg',  caption= 'Вот Андрей')
+    await bot.send_photo(message.chat.id, photo='https://airbet.ru/wp-content/uploads/2021/04/20-min-3.jpg',  caption= 'Вот Андрей', )
 
 
 @dp.message_handler(lambda message: message.text == 'Перейти на некст клавиатуру')
 async def button_2_click(message: types.Message):
-    await message.answer('Тут ты можешь попросить бота отправить фото Алькараса', reply_markup=keyboard_2)
+    await message.answer('Тут ты можешь попросить бота отправить фото Алькараса', reply_markup=get_keyboard_2)
 
 @dp.message_handler(lambda message: message.text == 'Отправь фото Алькараса')
 async def button_3_click(message: types.Message):
@@ -43,7 +39,7 @@ async def button_3_click(message: types.Message):
 
 @dp.message_handler(lambda message: message.text == 'Вернутся на первую клавиатуру')
 async def button_2_click(message: types.Message):
-    await message.answer('Тут ты можешь попросить бота отправить фото Алькараса', reply_markup=keyboard)
+    await message.answer('Тут ты можешь попросить бота отправить фото Алькараса', reply_markup=get_keyboard_1)
 
 @dp.message_handler(commands='help')
 async def help(message: types.Message):
